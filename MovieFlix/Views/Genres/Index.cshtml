@@ -1,0 +1,56 @@
+﻿@{
+    ViewData["Title"] = "Genres";
+}
+
+<h2 class="mb-4 text-light text-center">@ViewData["Title"]</h2>
+
+<div class="bg-dark text-light p-3 shadow rounded px-5">
+    <table id="genresTable" class="table table-dark table-bordered ">
+        <thead class="thead-light">
+            <tr>
+                <th>Name</th>
+                <th>Number of Movies</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+    </table>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#genresTable').DataTable({
+                "ajax": {
+                    "url": "/Genres/GetGenres",
+                    "type": "GET",
+                    "datatype": "json"
+                },
+                "columns": [
+                    { "data": "name" },
+                    { "data": "movieCount" },
+                    {
+                        "data": "genreId",
+                        "render": function (data, type, row) {
+                            return `
+                                <div class="btn-group gap-3" role="group">
+                                    <a href="/Genres/Edit/${data}" class="btn btn-sm btn-outline-warning" title="Edit">
+                                        <i class="bi bi-pencil-fill"></i>
+                                    </a>
+                                    <a href="/Genres/Delete/${data}" class="btn btn-sm btn-outline-danger" title="Delete">
+                                        <i class="bi bi-trash-fill"></i>
+                                    </a>
+                                </div>
+                            `;
+                        },
+                        "orderable": false
+                    }
+                ],
+                "language": {
+                    "emptyTable": "No genres available."
+                },
+                "responsive": true,
+                "autoWidth": false
+            });
+        });
+    </script>
+}

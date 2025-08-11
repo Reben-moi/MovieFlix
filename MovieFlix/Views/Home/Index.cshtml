@@ -1,0 +1,56 @@
+﻿@model MovieFlix.ViewModels.HomeIndexViewModel
+
+@{
+    ViewData["Title"] = "Browse Movies";
+    Layout = "/Views/Shared/_HomeLayout.cshtml";
+}
+
+<div class="container-fluid">
+
+    <h2 style="color:#C3CBFF">@ViewData["Title"]</h2>
+
+    <form method="get" asp-action="Index" class="mb-4 d-flex gap-3">
+        <select asp-for="SelectedGenreId" asp-items="Model.Genres" name="genreId" class="form-select form-select-sm w-auto"  onchange="this.form.submit()">
+            <option value="">All Genres</option>
+        </select>
+
+
+        <select asp-for="SelectedCinemaId" asp-items="Model.Cinemas" name="cinemaId" class="form-select form-select-sm w-auto"  onchange="this.form.submit()">
+            <option value="">All Cinemas</option>
+        </select>
+    </form>
+
+    <div class="row g-4 mb-4">
+        @if (Model.Movies.Any())
+        {
+            foreach (var movie in Model.Movies)
+            {
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3 ">
+                    <div class="movie-card  overflow-hidden position-relative">
+                        <img src="@movie.ImageUrl" class="card-thumbnail" alt="@movie.Title" />
+                        <div class="card-body">
+                            <h5 class="card-title fs-5 " style="color:#C3CBFF" >@movie.Title</h5>
+                        </div>
+                        <div class="card-body movie-overlay-text position-absolute w-100 h-100 text-white">
+                            <div class="movie-info">
+                               
+                                <small>Genre: @movie.Genre?.Name</small><br />
+                                <small>Year: @movie.ReleaseDate?.ToString("dd-MM-yyyy")</small> <br />
+                                <p>Rating: @(movie.Rating > 0 ? movie.Rating.ToString() : "Rating not available")</p>
+                                <p>Description:@(string.IsNullOrWhiteSpace(movie.Description) ? "No description available." : movie.Description)</p>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-12">
+                <div class="alert alert-warning">No movies found for this genre or cinema.</div>
+            </div>
+        }
+    </div>
+
+</div>

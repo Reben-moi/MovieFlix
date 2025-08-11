@@ -1,0 +1,79 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - MovieFlix</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/MovieFlix.styles.css" asp-append-version="true" />
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href=" https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.2.0/css/all.min.css">
+    
+ 
+ 
+
+</head>
+<body>
+       <nav class="nav navbar-expand-sm  mb-4">
+            <div class="container-fluid">
+               
+                <button style="margin-left:10px;" class="btn btn-link btn-sm text-secondary order-2 order-sm-0" id="sidebarToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+            <a class="navbar-brand mr-1 fs-2" asp-area="" asp-controller="Home" asp-action="Index" style="color:#C3CBFF">MovieFlix</a>
+
+            <form asp-action="Index" asp-controller="Home" id="form" class="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-5 my-2 my-md-0 navbar-search">
+                <div class="input-group">
+                    <input type="text" name="searchQuery" class="form-control" placeholder="Find what you want...." value="@ViewBag.SearchQuery" />
+                </div>
+            </form>
+                
+            </div>
+        </nav>
+        <div id="wrapper">
+            <!-- Sidebar -->
+            <ul class="sidebar navbar-nav ">
+                <li class="nav-item">
+                <a class="nav-link" asp-controller="Home" asp-action="Index">
+                        <i class="fas fa-fw fa-home"></i>
+                    <span class="fs-4">Home</span>
+                    </a>
+                </li>
+            <li class="nav-item active">
+                <a class="nav-link" asp-controller="Movie" asp-action="Index">
+                        <i class="fas fa-fw fa-film"></i>
+                    <span class="fs-4">Movies</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">
+                        <i class="fas fa-fw fa-desktop"></i>
+                        <span class="fs-4">TV Shows</span>
+                    </a>
+                </li>
+            </ul>
+
+        <div id="content-wrapper" class="container-fluid">
+            <main role="main" class="flex-grow-1">
+                @RenderBody()
+            </main>
+        </div>
+    </div>
+    <footer class=" fs-4 text-center py-3 mt-auto">
+            &copy; 2025 - MovieFlix
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,78 @@
+﻿@model MovieFlix.ViewModels.MovieFormViewModel
+
+@{
+    ViewData["Title"] = "Add New Movie";
+}
+
+<div class="container-fluid">
+
+    <h2 class="text-center" style="color:#C3CBFF">@ViewData["Title"]</h2>
+
+    <div class="container">
+        <form asp-action="Create" enctype="multipart/form-data" method="post" class="text-white p-4 rounded shadow-lg">
+
+            <div class="row mb-3 fs-5">
+                <div class="col-md-6" style="color:#C3CBFF">
+                    <label asp-for="Title" class="form-label text-primary"></label>
+                    <input asp-for="Title" class="form-control" />
+                    <span asp-validation-for="Title" class="text-danger small"></span>
+                </div>
+
+                <div class="col-md-6" style="color:#C3CBFF">
+                    <label asp-for="ReleaseDate" class="form-label text-primary"></label>
+                    <input asp-for="ReleaseDate" class="form-control" type="date" />
+                    <span asp-validation-for="ReleaseDate" class="text-danger small"></span>
+                </div>
+            </div>
+
+            <div class="row mb-3 fs-5">
+                <div class="col-md-6" style="color:#C3CBFF">
+                    <label asp-for="GenreId" class="form-label text-primary"></label>
+                    <select asp-for="GenreId" asp-items="Model.Genres" class="form-select">
+                        <option value="">-- Select Genre --</option>
+                    </select>
+                    <span asp-validation-for="GenreId" class="text-danger small"></span>
+                </div>
+
+                <div class="col-md-6" style="color:#C3CBFF">
+                    <label asp-for="Rating" class="form-label text-primary"></label>
+                    <input asp-for="Rating" class="form-control" type="number" step="0.1" />
+                    <span asp-validation-for="Rating" class="text-danger small"></span>
+                </div>
+            </div>
+
+            <div class="row mb-3 fs-5">
+                <div class="col-md-6" style="color:#C3CBFF">
+                    <label asp-for="CinemaId" class="form-label text-primary"></label>
+                    <select asp-for="CinemaId" asp-items="Model.Cinemas" class="form-select">
+                        <option value="">-- Select Cinema --</option>
+                    </select>
+                    <span asp-validation-for="CinemaId" class="text-danger small"></span>
+                </div>
+
+                <div class="col-md-6" style="color:#C3CBFF">
+                    <label asp-for="ImageFile" class="form-label text-primary fs-5">Upload Movie Poster</label>
+                    <input asp-for="ImageFile" type="file" class="form-control" required />
+                    <span asp-validation-for="ImageFile" class="text-danger small"></span>
+                </div>
+            </div>
+
+            <div class="form-group mb-3 fs-5" style="color:#C3CBFF">
+                <label asp-for="Description"></label>
+                <textarea asp-for="Description" class="form-control" rows="4"></textarea>
+                <span asp-validation-for="Description" class="text-danger small"></span>
+            </div>
+
+            <div class="d-flex gap-3 justify-content-center">
+                <button type="submit" class="btn btn-success px-4">
+                    <i class="bi bi-check-circle me-1"></i> Save
+                </button>
+
+                <a asp-action="Index" class="btn btn-danger">
+                    <i class="bi bi-x-circle me-1"></i> Cancel
+                </a>
+            </div>
+
+        </form>
+    </div>
+</div>

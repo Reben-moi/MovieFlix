@@ -1,0 +1,37 @@
+﻿@model MovieFlix.Models.Movie
+@{
+    ViewData["Title"] = "Delete Movie";
+}
+<div class="container-fluid">
+    <h2 class="text-center mb-5" style="color:#C3CBFF">@ViewData["Title"]</h2>
+
+    <div class=" text-white p-4 rounded shadow-lg">
+    <dl class="row text-light text-center">
+         <dd >
+            <img src="@Model.ImageUrl" width="200" />
+        </dd>
+
+            <dt class="fs-3" style="color:#C3CBFF">Title</dt>
+            <dd class="fs-4" style="color:#C3CBFF">@Model.Title</dd>
+
+            <dt class="fs-3" style="color:#C3CBFF">Genre</dt>
+            <dd class="fs-4" style="color:#C3CBFF">@Model.Genre?.Name</dd>
+
+          
+    </dl>
+
+
+    
+        <h3 class="text-center" style="color:#C3CBFF">Are you sure you want to delete this?</h3>
+
+    <form asp-action="Delete" class="text-center gap-4">
+        <input type="hidden" asp-for="MovieId" />
+            <button type="submit" class="btn btn-danger mt-2">
+            <i class="bi bi-trash"></i> Delete
+            </button>
+        <a asp-action="Index" class="btn btn-secondary mt-2">
+            <i class="bi bi-x-circle"></i> Cancel
+        </a>
+    </form>
+</div>
+</div>
