@@ -11,6 +11,8 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<MovieflixContext>(options =>
    options.UseSqlServer(builder.Configuration.GetConnectionString("MovieflixContext")));
 
+//builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<MovieflixContext>();
+
 
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
@@ -42,7 +44,7 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 
-app.MapRazorPages();
+app.MapRazorPages(); 
 
 using (var scope = app.Services.CreateScope())
 {

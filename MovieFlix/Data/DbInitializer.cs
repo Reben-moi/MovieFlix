@@ -30,7 +30,7 @@ namespace MovieFlix.Data
                     Email = superAdminEmail,
                     EmailConfirmed = true
                 };
-                await userManager.CreateAsync(superAdmin, "SuperAdmin");
+                await userManager.CreateAsync(superAdmin, "SuperAdmin@123");
                 await userManager.AddToRoleAsync(superAdmin, "SuperAdmin");
             }
 

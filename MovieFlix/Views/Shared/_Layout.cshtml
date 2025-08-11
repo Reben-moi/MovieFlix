@@ -29,6 +29,9 @@
                     <input type="text" name="searchQuery" class="form-control" placeholder="Find what you want...." value="@ViewBag.SearchQuery" />
                 </div>
             </form>
+                    <ul>
+                        @await Html.PartialAsync("_LoginPartial")
+                    </ul>
                 
             </div>
         </nav>

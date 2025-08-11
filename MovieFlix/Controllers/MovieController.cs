@@ -19,7 +19,7 @@ namespace MovieFlix.Controllers
 
 
 
-        public MovieController(MovieflixContext context)
+        public MovieController(MovieflixContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _userManager = userManager;
@@ -139,17 +139,17 @@ namespace MovieFlix.Controllers
         // GET: Admin/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+
+
+
+            var movie = await _context.Movies.FindAsync(id);
+            if (movie == null) return NotFound();
+
             var currentUser = await _userManager.GetUserAsync(User);
             if (User.IsInRole("CinemaAdmin") && movie.CinemaId != currentUser?.CinemaId)
             {
                 return Forbid();
             }
-
-
-            if (id == null) return NotFound();
-
-            var movie = await _context.Movies.FindAsync(id);
-            if (movie == null) return NotFound();
 
             var viewModel = new MovieFormViewModel
             {
@@ -183,11 +183,7 @@ namespace MovieFlix.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, MovieFormViewModel viewModel)
         {
-            var currentUser = await _userManager.GetUserAsync(User);
-            if (User.IsInRole("CinemaAdmin") && movie.CinemaId != currentUser?.CinemaId)
-            {
-                return Forbid();
-            }
+            
 
             ModelState.Remove(nameof(viewModel.Cinemas));
             if (id != viewModel.MovieId) return NotFound();
@@ -211,6 +207,12 @@ namespace MovieFlix.Controllers
 
             var movie = await _context.Movies.FindAsync(id);
             if (movie == null) return NotFound();
+
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (User.IsInRole("CinemaAdmin") && movie.CinemaId != currentUser?.CinemaId)
+            {
+                return Forbid();
+            }
 
             movie.Title = viewModel.Title;
             movie.ReleaseDate = viewModel.ReleaseDate;
@@ -250,11 +252,7 @@ namespace MovieFlix.Controllers
         // GET: Admin/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            var currentUser = await _userManager.GetUserAsync(User);
-            if (User.IsInRole("CinemaAdmin") && movie.CinemaId != currentUser?.CinemaId)
-            {
-                return Forbid();
-            }
+            
 
             if (id == null) return NotFound();
 
@@ -263,7 +261,11 @@ namespace MovieFlix.Controllers
                 .FirstOrDefaultAsync(movie => movie.MovieId == id);
 
             if (movie == null) return NotFound();
-
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (User.IsInRole("CinemaAdmin") && movie.CinemaId != currentUser?.CinemaId)
+            {
+                return Forbid();
+            }
             return View(movie);
         }
 
@@ -272,13 +274,16 @@ namespace MovieFlix.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+
+            var movie = await _context.Movies.FindAsync(id);
+            if (movie == null) return NotFound();
             var currentUser = await _userManager.GetUserAsync(User);
             if (User.IsInRole("CinemaAdmin") && movie.CinemaId != currentUser?.CinemaId)
             {
                 return Forbid();
             }
 
-            var movie = await _context.Movies.FindAsync(id);
+           
             if (movie != null)
             {
                 _context.Movies.Remove(movie);
