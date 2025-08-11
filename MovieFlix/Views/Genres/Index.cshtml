@@ -2,20 +2,23 @@
     ViewData["Title"] = "Genres";
 }
 
+<div class="container-fluid">
+
 <h2 class="mb-4 text-light text-center">@ViewData["Title"]</h2>
-
-<div class="bg-dark text-light p-3 shadow rounded px-5">
-    <table id="genresTable" class="table table-dark table-bordered ">
-        <thead class="thead-light">
-            <tr>
-                <th>Name</th>
-                <th>Number of Movies</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-    </table>
+    <div class="rounded shadow-lg">
+        <div class=" p-3">
+            <table id="genresTable" class="table table-dark table-bordered ">
+                <thead class="thead-light">
+                    <tr>
+                        <th>Name</th>
+                        <th>Number of Movies</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
 </div>
-
+</div>
 @section Scripts {
     <script>
         $(document).ready(function () {

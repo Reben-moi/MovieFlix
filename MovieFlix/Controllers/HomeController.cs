@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -11,15 +12,27 @@ namespace MovieFlix.Controllers
     public class HomeController : Controller
     {
         private readonly MovieflixContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public HomeController(MovieflixContext context)
+        public HomeController(MovieflixContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
+
         }
 
         public async Task<IActionResult> Index(int? genreId, int? cinemaId, string? searchQuery)
         {
+            var currentUser = await _userManager.GetUserAsync(User);
+           
             var moviesQuery = _context.Movies.Include(m => m.Genre).Include(m => m.Cinema).AsQueryable();
+
+            if (User.IsInRole("CinemaAdmin") && currentUser?.CinemaId != null)
+            {
+                moviesQuery = moviesQuery.Where(m => m.CinemaId == currentUser.CinemaId);
+            }
+
+           
 
             if (genreId.HasValue)
                 moviesQuery = moviesQuery.Where(m => m.GenreId == genreId);

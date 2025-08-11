@@ -1,5 +1,10 @@
 ﻿@model MovieFlix.ViewModels.HomeIndexViewModel
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
 
+@{
+    var isSignedin = SignInManager.IsSignedIn(User);
+}
 @{
     ViewData["Title"] = "Browse Movies";
     Layout = "/Views/Shared/_HomeLayout.cshtml";
@@ -26,12 +31,12 @@
             foreach (var movie in Model.Movies)
             {
                 <div class="col-12 col-sm-6 col-md-4 col-lg-3 ">
-                    <div class="movie-card  overflow-hidden position-relative">
+                    <div class="movie-card overflow-hidden position-relative">
                         <img src="@movie.ImageUrl" class="card-thumbnail" alt="@movie.Title" />
                         <div class="card-body">
                             <h5 class="card-title fs-5 " style="color:#C3CBFF" >@movie.Title</h5>
                         </div>
-                        <div class="card-body movie-overlay-text position-absolute w-100 h-100 text-white">
+                        <div class="card-body @(isSignedin ? "movie-overlay-text" : " ")  position-absolute w-100 h-100 text-white">
                             <div class="movie-info">
                                
                                 <small>Genre: @movie.Genre?.Name</small><br />
