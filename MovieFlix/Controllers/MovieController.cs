@@ -45,7 +45,8 @@ namespace MovieFlix.Controllers
 
             if (!string.IsNullOrWhiteSpace(searchQuery))
             {
-                query = query.Where(m => m.Title.Contains(searchQuery, StringComparison.OrdinalIgnoreCase));
+                var lowerSearchQuery = searchQuery.ToLower();
+                query = query.Where(m => m.Title.ToLower().Contains(lowerSearchQuery));
             }
 
             var movies = await query.ToListAsync();

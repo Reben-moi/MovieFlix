@@ -13,6 +13,8 @@
 
   
     <link href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
+
  
 
 </head>
@@ -27,19 +29,26 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
 
-            <div class="collapse navbar-collapse" id="navbarMain">
+            <div class="collapse navbar-collapse " id="navbarMain">
+                @{
+                    var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+                    var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+                }
+
+                @if (currentController == "Movie" && currentAction == "Index")
+                {
 
 
-                <form asp-action="Index" asp-controller="Home" id="form" class="d-flex mx-auto" role="search">
-                    <input type="text"
-                           name="searchQuery"
-                           class="form-control me-2"
-                           placeholder="Find what you want...."
-                           value="@ViewBag.SearchQuery"
-                           aria-label="Search" />
-                    <button class="btn btn-outline-light" type="submit">Search</button>
-                </form>
-
+                    <form asp-action="Index" asp-controller="Movie" id="form" class="d-flex mx-auto" role="search">
+                        <input type="text"
+                        name="searchQuery"
+                        class="form-control me-2"
+                        placeholder="Find what you want...."
+                        value="@ViewBag.SearchQuery"
+                        aria-label="Search" />
+                        <button class="btn btn-outline-light" type="submit">Search</button>
+                    </form>
+                }
 
                 <ul class="navbar-nav ms-auto align-items-center gap-3">
                     @await Html.PartialAsync("_LoginPartial")
@@ -73,7 +82,7 @@
             </main>
         </div>
     </div>
-    <footer class=" fs-4 text-center py-3 mt-auto">
+    <footer class=" fs-4 text-center py-3 mt-auto" style="background: #2F4169;">
             &copy; 2025 - MovieFlix
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
@@ -88,6 +97,7 @@
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
       <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 
 </body>
 </html>
