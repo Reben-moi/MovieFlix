@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MovieFlix.Data;
 using MovieFlix.Models;
+using MovieFlix.Services;
 using MovieFlix.ViewModels;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
@@ -15,14 +16,15 @@ namespace MovieFlix.Controllers
     {
         private readonly MovieflixContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly AuditService _auditService;
 
 
 
-
-        public MovieController(MovieflixContext context, UserManager<ApplicationUser> userManager)
+        public MovieController(MovieflixContext context, UserManager<ApplicationUser> userManager, AuditService auditService)
         {
             _context = context;
             _userManager = userManager;
+            _auditService = auditService;
         }
 
 
@@ -132,6 +134,13 @@ namespace MovieFlix.Controllers
 
             _context.Movies.Add(movie);
             await _context.SaveChangesAsync();
+
+            await _auditService.LogAsync(
+                action: "Created",
+                entityName: "Movie",
+                entityId: movie.MovieId,
+                details: $"Title: {movie.Title}, GenreId: {movie.GenreId}, CinemaId: {movie.CinemaId}"
+            );
             return RedirectToAction(nameof(Index));
         }
 
@@ -245,6 +254,13 @@ namespace MovieFlix.Controllers
                 throw;
             }
 
+            await _auditService.LogAsync(
+                action: "Edited",
+                entityName: "Movie",
+                entityId: movie.MovieId,
+                details: $"Updated movie Title to: {movie.Title}, GenreId: {movie.GenreId}, CinemaId: {movie.CinemaId}"
+            );
+
             return RedirectToAction(nameof(Index));
         }
 
@@ -288,6 +304,13 @@ namespace MovieFlix.Controllers
             {
                 _context.Movies.Remove(movie);
                 await _context.SaveChangesAsync();
+
+                await _auditService.LogAsync(
+                    action: "Deleted",
+                    entityName: "Movie",
+                    entityId: movie.MovieId,
+                    details: $"Deleted movie Title: {movie.Title}"
+                );
             }
 
             return RedirectToAction(nameof(Index));

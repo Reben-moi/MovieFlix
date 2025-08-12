@@ -13,6 +13,7 @@ namespace MovieFlix.Data {
         public DbSet<Cinema> Cinemas { get; set; }
 
         public DbSet<Genre> Genres { get; set; }
+        public DbSet<AuditLog> AuditLogs { get; set; }
     }
   
 }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MovieFlix.Data;
 
@@ -11,9 +12,11 @@ using MovieFlix.Data;
 namespace MovieFlix.Migrations
 {
     [DbContext(typeof(MovieflixContext))]
-    partial class MovieflixContextModelSnapshot : ModelSnapshot
+    [Migration("20250812084615_AuditLogs")]
+    partial class AuditLogs
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

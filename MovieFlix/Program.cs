@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MovieFlix.Data;
 using MovieFlix.Models;
+using MovieFlix.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +21,8 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddDefaultTokenProviders()
     .AddDefaultUI();
 
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<AuditService>();
 
 
 var app = builder.Build();
