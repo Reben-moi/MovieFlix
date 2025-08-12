@@ -12,31 +12,46 @@
     <link rel="stylesheet" href=" https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.2.0/css/all.min.css">
 
 
+    @using Microsoft.AspNetCore.Identity
+    @using MovieFlix.Models
 
+    @inject SignInManager<ApplicationUser> SignInManager
+    @inject UserManager<ApplicationUser> UserManager
 
 </head>
 <body>
+    <nav class="navbar navbar-expand-lg" style="background: #2F4169;">
+        <div class="container-fluid px-4">
+            <!-- Brand links to Home/Index -->
+            <a class="navbar-brand text-light fs-2" asp-controller="Home" asp-action="Index">MovieFlix</a>
 
-    <nav class="nav navbar-expand-sm  mb-4">
-            <div class="container-fluid">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain"
+                    aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
-                <button class="btn btn-link btn-sm text-secondary order-2 order-sm-0" id="sidebarToggle">
-                    <i class="fas fa-bars"></i>
-                </button>
-            <a class="navbar-brand fs-1 mr-1" asp-area="" asp-controller="Home" asp-action="Index" style="color:#C3CBFF">MovieFlix</a>
+            <div class="collapse navbar-collapse" id="navbarMain">
 
-                <form id="form" class="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-5 my-2 my-md-0 navbar-search">
-                    <div class="input-group">
-                        <input type="text" name="searchQuery" class="form-control" placeholder="Find what you want...." value="@Model.SearchQuery" />
-                   
-                <button type="submit">
-                    <i class="bi bi-search"></i>
-                </button>
-                </div>
+
+                <form asp-action="Index" asp-controller="Home" id="form" class="d-flex mx-auto" role="search">
+                    <input type="text"
+                           name="searchQuery"
+                           class="form-control me-2"
+                           placeholder="Find what you want...."
+                           value="@ViewBag.SearchQuery"
+                           aria-label="Search" />
+                    <button class="btn btn-outline-light" type="submit">Search</button>
                 </form>
 
+
+                <ul class="navbar-nav ms-auto align-items-center gap-3">
+                    @await Html.PartialAsync("_LoginPartial")
+                </ul>
+
             </div>
-        </nav>
+        </div>
+    </nav>
+
         <div id="wrapper">
             <!-- Sidebar -->
 
@@ -47,18 +62,15 @@
                     <span class="fs-4">Home</span>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" asp-controller="Movie" asp-action="Index">
-                        <i class="fas fa-fw fa-film"></i>
-                    <span class="fs-4">Movies</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">
-                        <i class="fas fa-fw fa-desktop"></i>
-                    <span class="fs-4">TV Shows</span>
-                    </a>
-                </li>
+                @if (User.IsInRole("SuperAdmin") || User.IsInRole("CinemaAdmin"))
+                 {
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Movie" asp-action="Index">
+                            <i class="fas fa-fw fa-film"></i>
+                        <span class="fs-4">Movies</span>
+                        </a>
+                    </li>
+                }
             </ul>
       
 

@@ -17,25 +17,38 @@
 
 </head>
 <body>
-       <nav class="nav navbar-expand-sm  mb-4">
-            <div class="container-fluid">
-               
-                <button style="margin-left:10px;" class="btn btn-link btn-sm text-secondary order-2 order-sm-0" id="sidebarToggle">
-                    <i class="fas fa-bars"></i>
-                </button>
-            <a class="navbar-brand mr-1 fs-2" asp-area="" asp-controller="Home" asp-action="Index" style="color:#C3CBFF">MovieFlix</a>
+    <nav class="navbar navbar-expand-lg" style="background: #2F4169;">
+        <div class="container-fluid px-4">
+            <!-- Brand links to Home/Index -->
+            <a class="navbar-brand text-light fs-2" asp-controller="Home" asp-action="Index">MovieFlix</a>
 
-            <form asp-action="Index" asp-controller="Home" id="form" class="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-5 my-2 my-md-0 navbar-search">
-                <div class="input-group">
-                    <input type="text" name="searchQuery" class="form-control" placeholder="Find what you want...." value="@ViewBag.SearchQuery" />
-                </div>
-            </form>
-                    <ul>
-                        @await Html.PartialAsync("_LoginPartial")
-                    </ul>
-                
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain"
+                    aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarMain">
+
+
+                <form asp-action="Index" asp-controller="Home" id="form" class="d-flex mx-auto" role="search">
+                    <input type="text"
+                           name="searchQuery"
+                           class="form-control me-2"
+                           placeholder="Find what you want...."
+                           value="@ViewBag.SearchQuery"
+                           aria-label="Search" />
+                    <button class="btn btn-outline-light" type="submit">Search</button>
+                </form>
+
+
+                <ul class="navbar-nav ms-auto align-items-center gap-3">
+                    @await Html.PartialAsync("_LoginPartial")
+                </ul>
+
             </div>
-        </nav>
+        </div>
+    </nav>
+
         <div id="wrapper">
             <!-- Sidebar -->
             <ul class="sidebar navbar-nav ">
@@ -51,12 +64,7 @@
                     <span class="fs-4">Movies</span>
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">
-                        <i class="fas fa-fw fa-desktop"></i>
-                        <span class="fs-4">TV Shows</span>
-                    </a>
-                </li>
+            
             </ul>
 
         <div id="content-wrapper" class="container-fluid">
@@ -78,7 +86,7 @@
 
     <!-- DataTables JS -->
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
 
 </body>
