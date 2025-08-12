@@ -5,14 +5,14 @@
     ViewData["Title"] = "Log in";
 }
 <div class="container-fluid">
-<h1 class="text-center">@ViewData["Title"]</h1>
+<h1 class="text-center text-white">@ViewData["Title"]</h1>
     <div class="row text-white p-4 rounded shadow-lg justify-content-center">
     <div class="col-md-4">
         <section>
             <form id="account" method="post">
-                <h2>Please enter your login credential</h2>
+                <h2 class="text-white">Please enter your login credential</h2>
                 <hr />
-                <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+                @* <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div> *@
 
                 <div class="form-floating mb-3">
                     <label asp-for="Input.Email" class="form-label text-black">Email</label>
