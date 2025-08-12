@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MovieFlix.Data;
@@ -14,34 +15,46 @@ namespace MovieFlix.Controllers
     public class GenresController : Controller
     {
         private readonly MovieflixContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public GenresController(MovieflixContext context)
+        public GenresController(MovieflixContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Genres
- 
-
-public async Task<IActionResult> Index()
-    {
-        var genres = await _context.Genres
-            .Include(g => g.Movies) // assuming a navigation property: public ICollection<Movie> Movies { get; set; }
-            .ToListAsync();
-
-        var viewModelList = genres.Select(g => new GenreViewModel
+        public async Task<IActionResult> Index()
         {
-            GenreId = g.GenreId,
-            Name = g.Name,
-            MovieCount = g.Movies.Count
-        }).ToList();
+            var currentUser = await _userManager.GetUserAsync(User);
 
-        return View(viewModelList);
-    }
+            IQueryable<Genre> genresQuery = _context.Genres.Include(g => g.Movies);
 
 
-    // GET: Genres/Details/5
-    public async Task<IActionResult> Details(int? id)
+            if (User.IsInRole("CinemaAdmin") && currentUser?.CinemaId != null)
+            {
+             
+            }
+
+            var genres = await genresQuery.ToListAsync();
+
+
+            var viewModelList = genres.Select(g => new GenreViewModel
+            {
+                GenreId = g.GenreId,
+                Name = g.Name,
+                MovieCount = User.IsInRole("CinemaAdmin") && currentUser?.CinemaId != null
+                    ? g.Movies.Count(m => m.CinemaId == currentUser.CinemaId)
+                    : g.Movies.Count
+            }).ToList();
+
+            return View(viewModelList);
+        }
+
+
+
+        // GET: Genres/Details/5
+        public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {
@@ -168,20 +181,32 @@ public async Task<IActionResult> Index()
         {
             return _context.Genres.Any(e => e.GenreId == id);
         }
-        [HttpGet]
-        public IActionResult GetGenres()
-        {
-            var genres = _context.Genres
-                .Select(g => new GenreViewModel
-                {
-                    GenreId = g.GenreId,
-                    Name = g.Name,
-                    MovieCount = g.Movies.Count
-                })
-                .ToList();
 
-            return Json(new { data = genres });
+        [HttpGet]
+        public async Task<IActionResult> GetGenres()
+        {
+            var currentUser = await _userManager.GetUserAsync(User);
+
+            IQueryable<Genre> genresQuery = _context.Genres.Include(g => g.Movies);
+
+            var genres = await genresQuery.ToListAsync();
+
+            var isCinemaAdmin = User.IsInRole("CinemaAdmin");
+            var userCinemaId = currentUser?.CinemaId;
+
+            var genreViewModels = genres.Select(g => new GenreViewModel
+            {
+                GenreId = g.GenreId,
+                Name = g.Name,
+                // If CinemaAdmin, count movies belonging only to user's CinemaId
+                MovieCount = (isCinemaAdmin && userCinemaId != null)
+                    ? g.Movies.Count(m => m.CinemaId == userCinemaId)
+                    : g.Movies.Count
+            }).ToList();
+
+            return Json(new { data = genreViewModels });
         }
+
 
     }
 }
