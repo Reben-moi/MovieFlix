@@ -86,7 +86,7 @@
 
         @if (isNormalUser && Model.RecommendedMovies.Any())
         {
-            <h3 class="mt-4 mb-3" style="color:#FFD700;">Recommended for You</h3>
+            <h3 class="mt-4 mb-3" style="color:#C3CBFF">Recommended for You</h3>
             <div class="row g-4 mb-4">
                 @foreach (var movie in Model.RecommendedMovies)
                 {
@@ -94,7 +94,7 @@
                         <div class="movie-card overflow-hidden position-relative" data-movie-id="@movie.MovieId">
                             <img src="@movie.ImageUrl" class="card-thumbnail" alt="@movie.Title" />
                             <div class="card-body">
-                                <h5 class="card-title fs-5" style="color:#FFD700;">@movie.Title</h5>
+                                <h5 class="card-title fs-5" style="color:#C3CBFF">@movie.Title</h5>
                             </div>
                             <div class="card-body @(isSignedin ? "movie-overlay-text" : "") position-absolute w-100 h-100 text-white">
                                 <div class="movie-info">
@@ -143,5 +143,9 @@
                 }
             });
         });
+
+        setInterval(function () {
+        location.reload();
+        }, 10000);
     </script>
 }

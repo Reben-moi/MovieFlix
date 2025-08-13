@@ -77,7 +77,7 @@ namespace MovieFlix.Controllers
                         TotalHover = g.Sum(a => a.HoverDurationMs)
                     })
                     .OrderByDescending(x => x.TotalHover)
-                    .Take(3) // top 5 most-hovered movies
+                    .Take(5) // top 5 most-hovered movies
                     .ToListAsync();
 
                 var topMovieIds = topMovies.Select(m => m.MovieId).ToList();
