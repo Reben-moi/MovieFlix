@@ -14,6 +14,8 @@ namespace MovieFlix.Data {
 
         public DbSet<Genre> Genres { get; set; }
         public DbSet<AuditLog> AuditLogs { get; set; }
+        public DbSet<MovieAnalytics> MovieAnalytics { get; set; }
+
     }
-  
+
 }

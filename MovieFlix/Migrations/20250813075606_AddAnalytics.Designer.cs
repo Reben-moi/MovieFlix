@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MovieFlix.Data;
 
@@ -11,9 +12,11 @@ using MovieFlix.Data;
 namespace MovieFlix.Migrations
 {
     [DbContext(typeof(MovieflixContext))]
-    partial class MovieflixContextModelSnapshot : ModelSnapshot
+    [Migration("20250813075606_AddAnalytics")]
+    partial class AddAnalytics
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -333,37 +336,6 @@ namespace MovieFlix.Migrations
                     b.ToTable("Movies");
                 });
 
-            modelBuilder.Entity("MovieFlix.Models.MovieAnalytics", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CinemaId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("HoverDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("HoverDurationMs")
-                        .HasColumnType("int");
-
-                    b.Property<int>("MovieId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("MovieId");
-
-                    b.ToTable("MovieAnalytics");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -430,17 +402,6 @@ namespace MovieFlix.Migrations
                     b.Navigation("Cinema");
 
                     b.Navigation("Genre");
-                });
-
-            modelBuilder.Entity("MovieFlix.Models.MovieAnalytics", b =>
-                {
-                    b.HasOne("MovieFlix.Models.Movie", "Movie")
-                        .WithMany()
-                        .HasForeignKey("MovieId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Movie");
                 });
 
             modelBuilder.Entity("MovieFlix.Models.Cinema", b =>

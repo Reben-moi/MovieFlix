@@ -1,6 +1,7 @@
 ﻿@model MovieFlix.ViewModels.HomeIndexViewModel
 @using Microsoft.AspNetCore.Identity
 @inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
 
 @{
     var isSignedin = SignInManager.IsSignedIn(User);
@@ -11,8 +12,20 @@
 }
 
 
+@{
+    var currentUser = SignInManager.IsSignedIn(User) ? await UserManager.GetUserAsync(User) : null;
+    var isNormalUser = false;
+
+    if (currentUser != null)
+    {
+        var roles = await UserManager.GetRolesAsync(currentUser);
+        isNormalUser = !roles.Contains("CinemaAdmin") && !roles.Contains("SuperAdmin");
+    }
+}
 
 <div class="container-fluid">
+    @Html.AntiForgeryToken()
+
     @{
         var successMessage = TempData["SuccessMessage"] as string;
     }
@@ -44,7 +57,7 @@
             foreach (var movie in Model.Movies)
             {
                 <div class="col-12 col-sm-6 col-md-4 col-lg-3 ">
-                    <div class="movie-card overflow-hidden position-relative">
+                    <div class="movie-card overflow-hidden position-relative" data-movie-id="@movie.MovieId">
                         <img src="@movie.ImageUrl" class="card-thumbnail" alt="@movie.Title" />
                         <div class="card-body">
                             <h5 class="card-title fs-5 " style="color:#C3CBFF" >@movie.Title</h5>
@@ -61,6 +74,7 @@
                         </div>
                     </div>
                 </div>
+
             }
         }
         else
@@ -69,6 +83,65 @@
                 <div class="alert alert-warning">No movies found for this genre or cinema.</div>
             </div>
         }
+
+        @if (isNormalUser && Model.RecommendedMovies.Any())
+        {
+            <h3 class="mt-4 mb-3" style="color:#FFD700;">Recommended for You</h3>
+            <div class="row g-4 mb-4">
+                @foreach (var movie in Model.RecommendedMovies)
+                {
+                    <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                        <div class="movie-card overflow-hidden position-relative" data-movie-id="@movie.MovieId">
+                            <img src="@movie.ImageUrl" class="card-thumbnail" alt="@movie.Title" />
+                            <div class="card-body">
+                                <h5 class="card-title fs-5" style="color:#FFD700;">@movie.Title</h5>
+                            </div>
+                            <div class="card-body @(isSignedin ? "movie-overlay-text" : "") position-absolute w-100 h-100 text-white">
+                                <div class="movie-info">
+                                    <small>Genre: @movie.Genre?.Name</small><br />
+                                    <small>Year: @movie.ReleaseDate?.ToString("dd-MM-yyyy")</small><br />
+                                    <p>Rating: @(movie.Rating > 0 ? movie.Rating.ToString() : "Rating not available")</p>
+                                    <p>Description:@(string.IsNullOrWhiteSpace(movie.Description) ? "No description available." : movie.Description)</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+
     </div>
 
 </div>
+@if (isNormalUser){
+    <script>
+        document.querySelectorAll('.movie-card').forEach(card => {
+            let hoverStartTime = null;
+
+            card.addEventListener('mouseenter', () => {
+                hoverStartTime = Date.now();
+            });
+
+            card.addEventListener('mouseleave', () => {
+                if (hoverStartTime) {
+                    let hoverDuration = Date.now() - hoverStartTime;
+                    hoverStartTime = null;
+
+                    let movieId = card.getAttribute('data-movie-id');
+
+                    fetch('/Analytics/RecordHover', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                        },
+                        body: JSON.stringify({
+                            movieId: movieId,
+                            hoverDuration: hoverDuration
+                        })
+                    });
+                }
+            });
+        });
+    </script>
+}
