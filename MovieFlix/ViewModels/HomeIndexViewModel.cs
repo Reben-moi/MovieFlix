@@ -12,7 +12,8 @@ namespace MovieFlix.ViewModels
         public int? SelectedCinemaId { get; set; }
         public List<SelectListItem> Genres { get; set; } = new();
         public string? SearchQuery { get; set; }
-    
-    }
 
+        public List<Movie> RecommendedMovies { get; set; } = new List<Movie>();
+    }
 }
+

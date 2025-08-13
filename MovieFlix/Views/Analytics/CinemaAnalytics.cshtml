@@ -1,0 +1,99 @@
+﻿@model MovieFlix.ViewModels.CinemaAnalyticsViewModel
+
+@{
+    ViewData["Title"] = "Cinema Analytics";
+}
+
+    <div class="container-fluid border-rounded shadow-lg">
+        <h2 class="text-center text-white">@ViewData["Title"]</h2>
+    <div class="chart-container rounded shadow-lg">
+
+        <canvas id="moviesChart" width="600" height="300"></canvas>
+
+    </div>
+
+    <div class="chart-container rounded shadow-lg mb-5" >
+
+        <canvas id="genresChart" width="400" height="400"></canvas>
+
+    </div>
+
+    </div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+
+    const movieLabels = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.PopularMovies.Select(x => x.MovieTitle)));
+    const movieData = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.PopularMovies.Select(x => x.TotalHoverTime / 1000.0)));
+
+    new Chart(document.getElementById('moviesChart'), {
+        type: 'bar',
+        data: {
+            labels: movieLabels,
+            datasets: [{
+                label: 'Popular Movies (s)',
+                data: movieData,
+                backgroundColor: 'grey',
+                borderWidth: 1,
+                borderColor: 'red' 
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,        
+                    text: 'Movies Hover Time (s)',
+                    font: { size: 25 },
+                    color: 'white'
+                },
+                legend: {
+                    display: true,
+                    labels: { color: 'white' }
+                }
+            },
+            scales: {
+                x: {
+                    ticks: { color: 'white' },
+                    grid: { color: 'rgba(255,255,255,0.2)' }
+                },
+                y: {
+                    ticks: { color: 'white' },
+                    grid: { color: 'rgba(255,255,255,0.2)' }
+                }
+            }
+        }
+    });
+
+    const genreLabels = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.PopularGenres.Select(x => x.Genre)));
+    const genreData = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.PopularGenres.Select(x => x.TotalHoverTime / 1000.0)));
+    const genreColors = ['red','blue','green','orange','purple','pink'];
+
+    new Chart(document.getElementById('genresChart'), {
+        type: 'pie',
+        data: {
+            labels: genreLabels,
+            datasets: [{
+                data: genreData,
+                backgroundColor: genreLabels.map((_, i) => genreColors[i % genreColors.length])
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,  
+                    text: 'Popular Genres',
+                    font: { size: 25 },
+                    color: 'white'
+                },
+                legend: {
+                    position: 'right',
+                    labels: { color: 'white' }
+                }
+            }
+        }
+    });
+
+</script>

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -24,7 +25,11 @@ namespace MovieFlix.Controllers
         public async Task<IActionResult> Index(int? genreId, int? cinemaId, string? searchQuery)
         {
             var currentUser = await _userManager.GetUserAsync(User);
-           
+            
+            var roles = currentUser != null ? await _userManager.GetRolesAsync(currentUser) : new List<string>();
+            bool isNormalUser = currentUser != null && !roles.Contains("CinemaAdmin") && !roles.Contains("SuperAdmin");
+
+
             var moviesQuery = _context.Movies.Include(m => m.Genre).Include(m => m.Cinema).AsQueryable();
 
             if (User.IsInRole("CinemaAdmin") && currentUser?.CinemaId != null)
@@ -61,12 +66,32 @@ namespace MovieFlix.Controllers
                 SearchQuery = searchQuery
             };
 
+         
+            if (isNormalUser)
+            {
+                var topMovies = await _context.MovieAnalytics
+                    .GroupBy(a => a.MovieId)
+                    .Select(g => new
+                    {
+                        MovieId = g.Key,
+                        TotalHover = g.Sum(a => a.HoverDurationMs)
+                    })
+                    .OrderByDescending(x => x.TotalHover)
+                    .Take(3) // top 5 most-hovered movies
+                    .ToListAsync();
+
+                var topMovieIds = topMovies.Select(m => m.MovieId).ToList();
+
+                viewModel.RecommendedMovies = await _context.Movies
+                    .Include(m => m.Genre)
+                    .Where(m => topMovieIds.Contains(m.MovieId))
+                    .OrderByDescending(m => m.Rating) // optional: break ties with rating
+                    .ToListAsync();
+            }
+
+
             return View(viewModel);
         }
-
-
-
-
 
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
@@ -74,5 +99,8 @@ namespace MovieFlix.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+      
+
     }
 }

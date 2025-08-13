@@ -348,3 +348,14 @@ a:hover, h1, h2, h3, h4, h5, h6 {
 .card-thumbnail{
     object-fit:contain;
 }
+
+
+.chart-container {
+    text-align: center; /* centers the canvas */
+}
+
+.chart-container canvas {
+    display: inline-block;
+}
+
+
