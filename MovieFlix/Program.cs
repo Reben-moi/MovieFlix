@@ -16,7 +16,20 @@ builder.Services.AddDbContext<MovieflixContext>(options =>
 
 
 
-builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>(
+    options =>
+    {
+        // Password settings
+        options.Password.RequireDigit = true;
+        options.Password.RequiredLength = 8;
+        options.Password.RequiredUniqueChars = 2;
+        options.Password.RequireLowercase = true;
+        options.Password.RequireNonAlphanumeric = true;
+        options.Password.RequireUppercase = true;
+
+        options.User.RequireUniqueEmail = true;
+    }
+    )
     .AddEntityFrameworkStores<MovieflixContext>()
     .AddDefaultTokenProviders()
     .AddDefaultUI();
